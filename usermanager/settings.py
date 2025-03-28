@@ -38,13 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'authentication',
-    'rest_framework',
     'drf_yasg',
+    # 'drf-spectacular',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -124,3 +128,55 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = "authentication.User"
+
+CORS_ALLOW_ALL_ORIGINS = True 
+
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:3000']
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = "True"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "patilaniket04@gmail.com"
+EMAIL_HOST_PASSWORD = "rubi tghk mism gguv"
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        "rest_framework.authentication.SessionAuthentication",
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+AUTHENTICATION_BACKENDS = [
+    'authentication.backends.EmailBackend',  # Your custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
+
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': True,  # Enable session authentication in Swagger UI
+    'SECURITY_DEFINITIONS': {
+        'Session Authentication': {
+            'type': 'apiKey',
+            'name': 'sessionid',  # Default session cookie used by Django
+            'in': 'cookie',
+            'description': "Django session authentication. Login via the Django admin panel or API login."
+        },
+        # 'Token Authentication': {
+        #     'type': 'apiKey',
+        #     'name': 'Authorization',
+        #     'in': 'header',
+        #     'description': "Enter your token as: Token <your_token>"
+        # }
+    },
+    'PERSIST_AUTH': True,  # Retain authentication after reload
+}
