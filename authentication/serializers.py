@@ -3,6 +3,7 @@ from .models import User
 
 
 # Serializer for User Registration
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -15,7 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-        
+# Verify Account 
+
 class VerifyAccountSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
